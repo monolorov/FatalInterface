@@ -129,12 +129,12 @@ export type Notifier = {
 }
 
 -- Exploit Environments --
-cloneref = cloneref or function(i) return i; end;
-clonefunction = clonefunction or function(...) return ...; end;
-hookfunction = hookfunction or function(a,b) return a; end;
-getgenv = getgenv or getfenv;
-protect_gui = protect_gui or protectgui or (syn and syn.protect_gui) or function() end;
-getgenv().LPH_NO_VIRTUALIZE = LPH_NO_VIRTUALIZE or function(f) return f end;
+cloneref = cloneref or function(i) return i end
+clonefunction = clonefunction or function(f) return f end
+hookfunction = hookfunction or function(a, b) return a end
+getgenv = getgenv or function() return _G end
+protect_gui = protect_gui or function() end
+getgenv().LPH_NO_VIRTUALIZE = getgenv().LPH_NO_VIRTUALIZE or function(f) return f end
 
 if game:GetService('RunService'):IsStudio() then
 	local BaseWorkspace = Instance.new('Folder',game:GetService("ReplicatedFirst"));
@@ -265,11 +265,7 @@ local UserInputService = cloneref(game:GetService('UserInputService'));
 local Client = Players.LocalPlayer;
 local Mouse = Client:GetMouse();
 local CurrentCamera = workspace.CurrentCamera;
-local _,CoreGui = xpcall(function()
-	return (gethui and gethui()) or game:GetService("CoreGui"):FindFirstChild("RobloxGui");
-end,function()
-	return Client.PlayerGui;
-end);
+local CoreGui = Client:WaitForChild("PlayerGui");
 
 -- Fatality --
 local Fatality = {};
@@ -4131,7 +4127,7 @@ function Fatality.new(Window: Window)
 	Window = Window or {};
 	Window.Name = Window.Name or "FATALITY";
 	Window.Scale = Window.Scale or UDim2.new(0, 750, 0, 500);
-	Window.Keybind = Window.Keybind or "Insert";
+	Window.Keybind = Window.Keybind or "Delete";
 	Window.Expire = Window.Expire or "never";
 
 	local Fatal = {
@@ -6759,4 +6755,4 @@ end;
 
 Fatality.FATALITY_PID = Fatality:RandomString();
 
-return Fatality;
+return Fatality
