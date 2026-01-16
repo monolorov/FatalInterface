@@ -53,10 +53,6 @@ export type Elements = {
 	AddKeybind: (self,Config: Keybind) -> {
 		Option: Elements	
 	},
-	AddTextbox: (self,Config: Textbox) -> {
-		Option: Elements	
-	},
-
 }
 
 export type Preview = {
@@ -118,18 +114,6 @@ export type Keybind = {
 	Callback: (string) -> any,
 	Flag: string | nil,
 	Option: boolean,
-}
-
-
-export type Textbox = {
-	Name: string,
-	Default: string,
-	Placeholder: string,
-	ClearOnFocus: boolean,
-	Callback: (string) -> any,
-	Risky: boolean,
-	Flag: string | nil,
-	Option: boolean
 }
 
 export type Notify = {
@@ -3306,156 +3290,6 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 		return Respons;
 	end;
 
-
-	function elements:AddTextbox(Config: Textbox)
-		Config = Config or {};
-		Config.Name = Config.Name or "Textbox";
-		Config.Default = Config.Default or "";
-		Config.Placeholder = Config.Placeholder or "";
-		Config.ClearOnFocus = (Config.ClearOnFocus ~= nil and Config.ClearOnFocus) or false;
-		Config.Risky = Config.Risky or false;
-		Config.Option = Config.Option or false;
-		Config.Callback = Config.Callback or function(str) end;
-		Config.Flag = Config.Flag or nil;
-
-		local TextboxFrame = Instance.new("Frame")
-		local Textbox_Name = Instance.new("TextLabel")
-		local ValueFrame = Instance.new("Frame")
-		local UICorner = Instance.new("UICorner")
-		local Input = Instance.new("TextBox")
-		local OptionButton = Instance.new("ImageButton")
-
-		if SearchAPI then
-			SearchAPI.Memory(Config.Name);
-		end;
-
-		TextboxFrame.Name = Fatality:RandomString()
-		TextboxFrame.Parent = Parent
-		TextboxFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		TextboxFrame.BackgroundTransparency = 1.000
-		TextboxFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		TextboxFrame.BorderSizePixel = 0
-		TextboxFrame.Size = UDim2.new(1, -25, 0, 17)
-		TextboxFrame.ZIndex = ZIndex + 1
-		Fatality:AddDragBlacklist(TextboxFrame);
-
-		Textbox_Name.Name = Fatality:RandomString()
-		Textbox_Name.Parent = TextboxFrame
-		Textbox_Name.AnchorPoint = Vector2.new(0, 0.5)
-		Textbox_Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Textbox_Name.BackgroundTransparency = 1.000
-		Textbox_Name.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		Textbox_Name.BorderSizePixel = 0
-		Textbox_Name.Position = UDim2.new(0, 0, 0.5, 0)
-		Textbox_Name.Size = UDim2.new(1, 0, 0.800000012, 0)
-		Textbox_Name.ZIndex = ZIndex + 2
-		Textbox_Name.FontFace = Fatality.FontSemiBold
-		Textbox_Name.TextColor3 = (Config.Risky and Color3.fromRGB(255, 160, 92)) or Color3.fromRGB(255, 255, 255)
-		Textbox_Name.TextSize = 13.000
-		Textbox_Name.TextTransparency = 1
-		Textbox_Name.TextXAlignment = Enum.TextXAlignment.Left
-
-		Fatality:ProtectText(Textbox_Name,Config.Name);
-
-		ValueFrame.Name = Fatality:RandomString()
-		ValueFrame.Parent = TextboxFrame
-		ValueFrame.AnchorPoint = Vector2.new(1, 0.5)
-		ValueFrame.BackgroundColor3 = Fatality.Colors.Black
-		ValueFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		ValueFrame.BorderSizePixel = 0
-		ValueFrame.Position = UDim2.new(1, -3, 0.5, 0)
-		ValueFrame.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
-		ValueFrame.SizeConstraint = Enum.SizeConstraint.RelativeYY
-		ValueFrame.ZIndex = ZIndex + 2
-		ValueFrame.BackgroundTransparency = 1
-
-		UICorner.CornerRadius = UDim.new(0, 2)
-		UICorner.Parent = ValueFrame
-
-		Input.Name = Fatality:RandomString()
-		Input.Parent = ValueFrame
-		Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Input.BackgroundTransparency = 1.000
-		Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		Input.BorderSizePixel = 0
-		Input.Position = UDim2.new(0, 4, 0, 0)
-		Input.Size = UDim2.new(1, -8, 1, 0)
-		Input.ZIndex = ZIndex + 3
-		Input.ClearTextOnFocus = Config.ClearOnFocus
-		Input.FontFace = Fatality.FontSemiBold
-		Input.PlaceholderText = Config.Placeholder
-		Input.Text = tostring(Config.Default)
-		Input.TextColor3 = Color3.fromRGB(255, 255, 255)
-		Input.TextSize = 11.000
-		Input.TextStrokeTransparency = 0.850
-		Input.TextTransparency = 0.400
-		Input.TextXAlignment = Enum.TextXAlignment.Left
-		Input.ClipsDescendants = true
-
-		OptionButton.Name = Fatality:RandomString()
-		OptionButton.Parent = TextboxFrame
-		OptionButton.AnchorPoint = Vector2.new(1, 0.5)
-		OptionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		OptionButton.BackgroundTransparency = 1.000
-		OptionButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		OptionButton.BorderSizePixel = 0
-		OptionButton.Position = UDim2.new(1, -25, 0.5, 0)
-		OptionButton.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
-		OptionButton.SizeConstraint = Enum.SizeConstraint.RelativeYY
-		OptionButton.Image = "http://www.roblox.com/asset/?id=14007344336"
-		OptionButton.ImageTransparency = 1
-		OptionButton.ZIndex = ZIndex + 4
-		OptionButton.Visible = Config.Option
-
-		local OpcToggle = function(value)
-			if value then
-				Fatality:CreateAnimation(Textbox_Name,0.45,{TextTransparency = 0.200})
-				Fatality:CreateAnimation(ValueFrame,0.45,{BackgroundTransparency = 0})
-				Fatality:CreateAnimation(Input,0.45,{TextStrokeTransparency = 0.850, TextTransparency = 0.400})
-				Fatality:CreateAnimation(OptionButton,0.45,{ImageTransparency = (Config.Option and 0.600) or 1})
-			else
-				Fatality:CreateAnimation(Textbox_Name,0.45,{TextTransparency = 1})
-				Fatality:CreateAnimation(ValueFrame,0.45,{BackgroundTransparency = 1})
-				Fatality:CreateAnimation(Input,0.45,{TextStrokeTransparency = 1, TextTransparency = 1})
-				Fatality:CreateAnimation(OptionButton,0.45,{ImageTransparency = 1})
-			end;
-		end;
-
-		OpcToggle(Event:GetAttribute('V'))
-
-		Input.FocusLost:Connect(function()
-			Config.Default = Input.Text
-			Config.Callback(Config.Default)
-		end)
-
-		local Respons = Fatality:CreateResponse({
-			Rename = function(new_name)
-				Textbox_Name.Text = new_name
-				Fatality:ProtectText(Textbox_Name,new_name);
-			end,
-			GetValue = function()
-				return Config.Default;
-			end,
-			Signal = Event.Event:Connect(OpcToggle),
-			SetValue = function(v)
-				local IsSame = tostring(v) == tostring(Config.Default)
-				Config.Default = tostring(v)
-				Input.Text = Config.Default
-				if not IsSame then
-					Config.Callback(Config.Default)
-				end
-			end,
-			Flag = Config.Flag and (Config.Flag.."Textbox"),
-			Option = (Config.Option and Fatality:CreateOption(OptionButton)) or nil;
-		});
-
-		if Config.Flag then
-			Fatality.WindowFlags[FatalWindow][Config.Flag.."Textbox"] = Respons;
-		end;
-
-		return Respons;
-	end;
-
 	function elements:AddKeybind(Config: Keybind)
 		Config = Config or {};
 		Config.Name = Config.Name or "Keybind";
@@ -5663,15 +5497,20 @@ function Fatality.new(Window: Window)
 					return;
 				end;
 
-				for i,v in next , ScrollingFrame:GetChildren() do
-	if v:IsA('TextButton') then
-		if string.find(string.lower(v.Text),string.lower(TextBox.Text),1,true) then
-			v.Visible = true;
-		else
-			v.Visible = false;
-		end;
-	end;
-end;;
+				task.delay(0.25,function()
+					if (tick() - DearchDelay) > 0.25 then
+						for i,v in next , ScrollingFrame:GetChildren() do
+							if v:IsA('TextButton') then
+								if string.find(string.lower(v.Text),string.lower(TextBox.Text),1,true) then
+									v.Visible = true;
+								else
+									v.Visible = false;
+								end;
+							end;
+						end;
+					end;
+				end)
+			end);
 
 			local res;
 			res = Fatality:CreateResponse({
@@ -6318,13 +6157,18 @@ end;;
 				return;
 			end;
 
-			for i,v in next , SearchInformation do
-	if string.find(tostring(string.lower(i)),string.lower(TextBox.Text),1,true) then
-		v.root.Visible = true;
-	else
-		v.root.Visible = false;
-	end;
-end;;
+			task.delay(0.5,function()
+				if (tick() - DearchDelay) > 0.5 then
+					for i,v in next , SearchInformation do
+						if string.find(tostring(string.lower(i)),string.lower(TextBox.Text),1,true) then
+							v.root.Visible = true;
+						else
+							v.root.Visible = false;
+						end;
+					end;
+				end;
+			end)
+		end);
 
 		UserInputService.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
